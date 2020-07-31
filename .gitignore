@@ -1,4 +1,6 @@
 .vscode
 __pycache__
 .ipynb_checkpoints
-Tw_Credentials.py
+Python_Program/CREDENTIALS.py
+Python_Program/Tweets_Sentiment.py
+pickleFiles/
