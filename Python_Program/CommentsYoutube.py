@@ -20,7 +20,7 @@ def __GetAuthenticatedService():
                  credentials=credentials)
 
 
-def getCommentsFromVideo(videoName, voteClassifier):
+def getCommentsFromVideo(voteClassifier, videoName):
     """
     Function to get comments from the video that receives as parameter
     """

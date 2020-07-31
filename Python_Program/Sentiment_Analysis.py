@@ -1,5 +1,6 @@
 import pickle
 import os.path
+import argparse
 
 import CREDENTIALS as CREDENTIALS
 
@@ -57,7 +58,40 @@ def buildVoteClassifier():
 if __name__ == '__main__':
     voteClassifier = buildVoteClassifier()
 
-#    YTComments.getCommentsFromVideo('DIY Bowling Alley Coffee Table | Modern Builds | EP. 35', voteClassifier)
+    # Definir los argumentos
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--platform", required=True,
+       help="Platform from which the data will be obtained. Twitter = TW, Youtube = YT")
+    ap.add_argument("--keyword", nargs='+',
+       help="Keyword to listen tweets")
+    ap.add_argument("--videoname", 
+       help="Name of the video for which you want to get comments")
 
-#    TWTweets.listenTweets(voteClassifier)
+    # Object with the arguments
+    args = ap.parse_args()
+
+    # Check if the arguments were complete
+    if (args.platform == 'TW'):
+
+        # Chek that the keyword was received
+        if(not args.keyword):
+            print('\nWhen usign --plataform=TW you also need to send the --keyword parameter')
+        
+        else:
+            # Start the tweets listener
+            TWTweets.listenTweets(voteClassifier, args.keyword)
+
+    # Check if the arguments were complete
+    elif (args.platform == 'YT'):
+
+        # Chek that the keyword was received
+        if(not args.videoname):
+            print('\nWhen usign --plataform=YT you also need to send the --videoname parameter')
+        
+        else:
+            # Start the youtube comments analizer
+            YTComments.getCommentsFromVideo(voteClassifier, args.videoname)
+    
+    else:
+        print("The parameter --plataform muste be TW or YT")
 
