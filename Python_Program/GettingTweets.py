@@ -3,18 +3,16 @@ import json
 import time
 
 # Imports from the Tweepy API
-from tweepy.streaming import StreamListener
-from tweepy import OAuthHandler
-from tweepy import Stream
 from tweepy import API
+from tweepy import Stream
+from tweepy import OAuthHandler
+from tweepy.streaming import StreamListener
 
 # Imports the file with the credentials
 import CREDENTIALS as CREDENTIALS
 
 # Variable to store the pointer to the CSV file
 OUTPUT_FILE = None
-# Variable to know if the output file already exists or not
-FILE_EXISTS = False
 # Global variable to store the VoteClassifier object
 CLASSIFIER = None
 # Count how many tweets were mined
@@ -35,7 +33,6 @@ class MyStreamListener(StreamListener):
 
     def on_data(self, data):
         # Get the global variables
-        global FILE_EXISTS
         global OUTPUT_FILE
         global TWEETS_COUNT
         global REJECT_COUNT
@@ -65,13 +62,13 @@ class MyStreamListener(StreamListener):
                 # If the confidence of the classification is higher than
                 # 80% write the tweet text on the output file
                 if (confidenceValue * 100) >= 80:
-                    finalSentiment = sentimentValue + \
-                        ' ' + str(confidenceValue)
+                    
+                    finalSentiment = sentimentValue + ' ' + str(confidenceValue)
+
                     OUTPUT_FILE.write(finalSentiment)
                     OUTPUT_FILE.write('\n' + textTweet + '\n\n')
 
-                # Print a dot
-                _printResult('.')
+                TWEETS_COUNT += 1
 
             return True
 
@@ -81,21 +78,7 @@ class MyStreamListener(StreamListener):
 
         return True
 
-def _printResult(cChar):
-    """
-    Function to print a point or a asteristic(error)
-    """
-    global TWEETS_COUNT
-
-    # Increase the tweets counter
-    TWEETS_COUNT += 1
-
-    if TWEETS_COUNT % 35 == 0:
-        print(cChar)
-    else:
-        print(cChar, end=' ')
-
-def _Get_Authentication():
+def __Get_Authentication():
     """
     Get the authentication of the twitter app
     """
@@ -117,7 +100,6 @@ def listenTweets(voteClassifier, keyWords=['happy', 'sad']):
     - voteClassifier: The object with the vote classifier
     """
     # Get the global variables
-    global FILE_EXISTS
     global OUTPUT_FILE
     global TWEETS_COUNT
     global REJECT_COUNT
@@ -125,23 +107,18 @@ def listenTweets(voteClassifier, keyWords=['happy', 'sad']):
     
     try:
         # Start to the listen tweets
-        Auth = _Get_Authentication()
+        Auth = __Get_Authentication()
         myStreamListener = MyStreamListener()
         myStream = Stream(Auth, myStreamListener)
 
         # Output filename
         outputFile = 'Tweets_Sentiment.txt'
 
-        # Check if the CSV file already exits
-        if os.path.exists(outputFile):
-            FILE_EXISTS = True
-
         # Open the file where the tweets are going to be write
         OUTPUT_FILE = open(outputFile, 'a+', encoding='UTF-8', newline='')
 
         # Build the VoteClassifie
         CLASSIFIER = voteClassifier
-        print('Here')
 
         print("\n>> Listening tweets")
 

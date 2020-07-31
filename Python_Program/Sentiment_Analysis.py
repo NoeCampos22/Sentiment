@@ -1,13 +1,10 @@
 import pickle
 import os.path
 
-# Imports the file with the credentials
 import CREDENTIALS as CREDENTIALS
 
-# Import the VoteClassifier class
 from VoteClassifier import VoteClassifier
 
-# Import the files to extract the youtube comments and tweets
 import CommentsYoutube as YTComments
 import GettingTweets as TWTweets
 
@@ -60,5 +57,7 @@ def buildVoteClassifier():
 if __name__ == '__main__':
     voteClassifier = buildVoteClassifier()
 
-    TWTweets.listenTweets(voteClassifier)
+#    YTComments.getCommentsFromVideo('DIY Bowling Alley Coffee Table | Modern Builds | EP. 35', voteClassifier)
+
+#    TWTweets.listenTweets(voteClassifier)
 
